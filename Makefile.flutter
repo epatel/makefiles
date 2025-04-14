@@ -1,0 +1,18 @@
+enter: menu select
+
+menu:
+	echo "1 make update_phony"
+	echo "2 make reset"
+
+select:
+	read -p ">>> " P ; make menu | grep "^$$P " | cut -d ' ' -f2-3 ; make menu | grep "^$$P " | cut -d ' ' -f2-3 | bash
+
+.SILENT:
+
+.PHONY: enter menu select menu select update_phony reset
+
+update_phony:
+	( PHONY=`grep -e "^[^\\.	][a-z_]*:.*$$" Makefile | sed "s/://" | xargs echo .PHONY:` ; sed -i "" "s/^.PHONY:.*/$$PHONY/" Makefile )
+
+reset:
+	flutter clean ; flutter pub get
