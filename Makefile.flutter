@@ -1,8 +1,11 @@
+EXPORTS=exports
+
 enter: menu select
 
 menu:
 	echo "1 make update_phony"
 	echo "2 make reset"
+	echo "3 make update_exports"
 
 select:
 	read -p ">>> " P ; make menu | grep "^$$P " | cut -d ' ' -f2-3 ; make menu | grep "^$$P " | cut -d ' ' -f2-3 | bash
@@ -16,3 +19,8 @@ update_phony:
 
 reset:
 	flutter clean ; flutter pub get
+
+update_exports:
+	cat lib/$(EXPORTS).inc > lib/$(EXPORTS).dart
+	echo >> lib/$(EXPORTS).dart
+	for fn in `find lib -name "*.dart" | sort | grep -v $(EXPORTS).dart` ; do echo "export \"$$fn\";" | sed 's/"lib\//"/' | sed "s/\"/'/g" >> lib/$(EXPORTS).dart ; done
