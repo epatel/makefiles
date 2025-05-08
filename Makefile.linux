@@ -1,0 +1,20 @@
+MAKEFLAGS += --no-print-directory
+
+enter: menu select
+
+menu:
+	echo "1 make update_phony"
+	echo "2 make backup"
+
+select:
+	read -p ">>> " P ; make menu | grep "^$$P " | cut -d ' ' -f2-3 ; make menu | grep "^$$P " | cut -d ' ' -f2-3 | bash
+
+.SILENT:
+
+.PHONY: enter menu select update_phony backup
+
+update_phony:
+	( PHONY=`grep -e "^[^\\.	][a-z_]*:.*$$" Makefile | sed "s/:.*//" | xargs echo .PHONY:` ; sed -i"" "s/^.PHONY:.*/$$PHONY/" Makefile )
+
+backup:
+	echo "Not yet implemented"
